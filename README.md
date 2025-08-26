@@ -4,6 +4,8 @@
 
 This repo is an implementation of the tutorial entitled [Build an LLM RAG Chatbot With LangChain](https://realpython.com/build-llm-rag-chatbot-with-langchain/) written by [Harrison Hoffman](https://realpython.com/team/hhoffman/)
 
+![Screenshot](screenshot.png)
+
 ## Build an LLM RAG Chatbot With LangChain
 
 Currently, the chatbot performs RAG over a synthetic [hospital system dataset](https://realpython.com/build-llm-rag-chatbot-with-langchain/#explore-the-available-data) and supports the _following features_:
@@ -21,6 +23,18 @@ Currently, the chatbot performs RAG over a synthetic [hospital system dataset](h
 - **Serving via FastAPI**: The chatbot agent is served as an asynchronous FastAPI endpoint.
 
 ## Getting Started
+
+```yaml
+python: 3.10+
+```
+
+```requirements.txt
+langchain==0.1.0
+openai==1.7.2
+langchain-openai==0.0.2
+langchain-community==0.0.12
+langchainhub==0.1.14
+```
 
 Create a `.env` file in the root directory and add the following environment variables:
 
