@@ -7,8 +7,20 @@ from langchain.prompts import (
     ChatPromptTemplate,
 )
 from langchain_core.output_parsers import StrOutputParser
+from langchain_community.vectorstores import Chroma
+from langchain_openai import OpenAIEmbeddings
+from langchain.schema.runnable import RunnablePassthrough
 
 dotenv.load_dotenv()
+
+REVIEWS_CHROMA_PATH = "chroma_data/"
+
+reviews_vector_db = Chroma(
+    persist_directory=REVIEWS_CHROMA_PATH,
+    embedding_function=OpenAIEmbeddings(),
+)
+
+reviews_retriever = reviews_vector_db.as_retriever(k=10)
 
 review_template_str = """
     Your job is to use patient reviews to answer questions about their experience at a hospital.
@@ -45,7 +57,12 @@ chat_model = ChatOpenAI(
 
 output_parser = StrOutputParser()
 
-review_chain = review_prompt_template | chat_model | output_parser
+review_chain = (
+    {"context": reviews_retriever, "question": RunnablePassthrough()}
+    | review_prompt_template
+    | chat_model
+    | output_parser
+)
 
 
 if __name__ == '__main__':
@@ -58,3 +75,9 @@ if __name__ == '__main__':
     })
 
     print(response)
+
+    question2 = """
+        Has anyone complained about communication with the hospital staff?
+    """
+    response2 = review_chain.invoke(question)
+    print(response2)
